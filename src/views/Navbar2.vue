@@ -81,7 +81,7 @@ onUnmounted(() => {
 
 <style scoped>
 .footer-nav {
-  background: red;
+  background: rgb(119, 119, 119);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   position: fixed;
