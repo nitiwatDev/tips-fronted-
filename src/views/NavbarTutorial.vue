@@ -35,7 +35,7 @@ const getDirection = async () => {
   console.log("containerRect", containerRect.left);
   console.log("activeItemRect", activeItemRect.left);
 
-  const positionXActive = activeItemRect.left - containerRect.left;;
+  const positionXActive = activeItemRect.left - containerRect.left;
   container.style.setProperty("--position-x-active", `${positionXActive}px`);
 };
 
@@ -187,15 +187,19 @@ footer .container ul li a .icon svg {
   height: 23px;
 }
 
-footer .container .effect {
+/* เรื่มเขียน effect */
+
+/* footer .container .effect {
   position: absolute;
   width: 100%;
   bottom: 0;
   height: calc(var(--w-h-item) + 25px);
   overflow: hidden;
-}
+} */
 
-footer .container .effect::before {
+/* สร้าง element แถบด้านซ้าย */
+
+/* footer .container .effect::before {
   content: "";
   position: absolute;
   left: 0;
@@ -205,9 +209,11 @@ footer .container .effect::before {
   background-color: white;
   border-radius: 16px 30px 0 16px;
   transition: all 0.3s ease;
-}
+} */
 
-footer .container .effect::after {
+/* สร้าง element แถบด้านขวา */
+
+/* footer .container .effect::after {
   content: "";
   position: absolute;
   right: 0;
@@ -218,9 +224,11 @@ footer .container .effect::after {
   border-radius: 30px 16px 16px 0;
   z-index: -1;
   transition: all 0.3s ease;
-}
+} */
 
-footer .container .effect .circle {
+/* สร้าง element วงกลม */
+
+/* footer .container .effect .circle {
   position: absolute;
   width: calc(var(--w-h-item) - 4px);
   height: calc(var(--w-h-item) - 4px);
@@ -229,9 +237,11 @@ footer .container .effect .circle {
   left: calc(var(--position-x-active) + 2px);
   border-radius: 50%;
   transition: all 0.3s ease;
-}
+} */
 
-footer .container .effect .circle::before {
+/* สร้างตัวเชื่อมให้เข้ากับ navbar */
+
+/* footer .container .effect .circle::before {
   content: "";
   position: absolute;
   left: -3px;
@@ -242,6 +252,5 @@ footer .container .effect .circle::before {
   box-shadow: 0px 50px 0px 20px white;
   transition: all 0.3s ease;
   bottom: -6px;
-}
-
+} */
 </style>
