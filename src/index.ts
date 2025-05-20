@@ -6,7 +6,6 @@ import ThreeD from "./views/ThreeD.vue";
 import Ref from "./views/Ref.vue";
 import Navbar from "./views/Navbar.vue";
 import Navbar2 from "./views/Navbar2.vue";
-import NavbarTutorial from "./views/NavbarTutorial.vue";
 const routes = [
   {
     path: "/",
@@ -65,15 +64,6 @@ const routes = [
 
     meta: {
       title: "navbar2",
-    },
-  },
-  {
-    path: "/navbarTutorial",
-    name: "navbarTutorial",
-    component: NavbarTutorial,
-
-    meta: {
-      title: "navbarTutorial",
     },
   },
 ];

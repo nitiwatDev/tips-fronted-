@@ -72,7 +72,6 @@ export default defineComponent({
       { to: "/ref", label: "Ref" },
       { to: "/Navbar", label: "Navbar" },
       { to: "/Navbar2", label: "Navbar2" },
-      { to: "/NavbarTutorial", label: "Navbar Tutorial" },
     ];
 
     // Access the current route using `useRoute` hook
