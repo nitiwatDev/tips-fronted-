@@ -35,13 +35,12 @@
           </div>
         </div>
         <div class="flex flex-col gap-2" v-else-if="currentSlide === 'utility'">
-          <p>
-            isRefValue : <span>{{ isRefValue }}</span>
-          </p>
-
           <div class="flex items-center gap-4">
             <button @click="handlerAdd('toRef')">Add</button>
             <div class="flex flex-col gap-2">
+              <p>
+                isRefValue : <span>{{ isRefValue }}</span>
+              </p>
               <div class="flex items-center gap-4">
                 <p>reactiveObject :</p>
                 <pre> {{ JSON.stringify(reactiveObject, null, 2) }}</pre>
@@ -76,6 +75,7 @@
           <button @click="handlerAdd('toRaw')">ToRaw</button>
         </div>
       </Transition>
+
       <button @click="updateSlide('next')" class="btn-slide right-[-80px]">
         <span class="!text-black !text-[20px]">></span>
       </button>
@@ -84,7 +84,7 @@
 </template>
 <script setup lang="ts">
 //core
-import { ref, computed, reactive, readonly } from "vue";
+import { ref, computed, reactive, readonly, isReactive, onMounted } from "vue";
 
 // Utility
 import { isRef, toRef } from "vue";
@@ -92,10 +92,14 @@ import { isRef, toRef } from "vue";
 //Advanced
 import { shallowRef, shallowReactive, markRaw, toRaw } from "vue";
 
+//other
+import { provide, inject, type Ref } from "vue";
+import Chart from "chart.js/auto";
 import { type Component } from "vue";
 import SvgDeposit from "../components/SvgDeposit.vue";
 import SvgWithdraw from "../components/SvgWithdraw.vue";
 import SvgDelete2 from "../components/SvgDelete2.vue";
+import ChildrenCom from "../components/ChildrenCom.vue";
 let letValue = 0;
 const refValue = ref<number>(0);
 const computedValue = computed<number>(() => refValue.value + 1);
@@ -103,7 +107,9 @@ const reactiveValue = reactive({
   name: "John",
   age: 30,
 });
-const readonlyValue = readonly(reactiveValue);
+const original = { count: 0 };
+const originalReactive = reactive({ count: 0 });
+const readonlyValue = readonly(originalReactive);
 
 // Utility
 const isRefValue = isRef(refValue);
@@ -173,7 +179,10 @@ const handlerAdd = (type: string) => {
       break;
     case "shallow":
       // Reactivity is only at the top level
-      shallowRefValue.value = { name: "Jane", pet: { type: "cat", age: 3 } }; // Reactive
+      shallowRefValue.value = {
+        ...shallowRefValue.value,
+        name: "Jane",
+      };
       // shallowRefValue.value.name = "Jane"; // Not reactive
       break;
     case "shallowReactive":
@@ -204,6 +213,46 @@ const updateSlide = (direction: "prev" | "next") => {
     currentSlide.value = arrSlide[(currentIndex + 1) % arrSlide.length];
   }
 };
+
+
+type NestedObject = { value: number | string }
+function generateLargeNestedObject() {
+  const obj: { [key: string]: NestedObject } = {}
+  for (let i = 0; i < 10000; i++) {
+    obj[`key${i}`] = { value: i }
+  }
+  return obj
+}
+
+function testReactivityMutation() {
+  const raw = generateLargeNestedObject()
+
+  // ref (deep)
+  const refData = ref(raw)
+  console.time('ref mutation')
+  refData.value['key5000'].value = 'updated'
+  console.timeEnd('ref mutation')
+
+  // shallowRef (only top-level reactive)
+  const shallowRefData = shallowRef(raw)
+  console.time('shallowRef mutation')
+  shallowRefData.value['key5000'].value = 'updated' // not reactive unless re-assigned
+  console.timeEnd('shallowRef mutation')
+
+  // reactive (deep)
+  const reactiveData = reactive(raw)
+  console.time('reactive mutation')
+  reactiveData['key5000'].value = 'updated'
+  console.timeEnd('reactive mutation')
+
+  // shallowReactive (only first level)
+  const shallowReactiveData = shallowReactive(raw)
+  console.time('shallowReactive mutation')
+  shallowReactiveData['key5000'].value = 'updated' // not tracked deeply
+  console.timeEnd('shallowReactive mutation')
+}
+
+testReactivityMutation()
 </script>
 <style lang="css" scoped>
 h1 {
